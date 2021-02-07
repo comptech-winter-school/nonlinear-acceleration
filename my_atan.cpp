@@ -7,124 +7,86 @@
 
 using namespace std;
 
-double calculatePolynom(double x, const double* Poly)
+double calculatePolynom1(double x, int i)
 {
     double z, y, x2, t;
     t = abs(x);
     x2 = x * x;
-    y = fma(Poly[9], x2, Poly[7]);
-    y = fma(y, x2, Poly[5]);
-    y = fma(y, x2, Poly[3]);
-    y = fma(y, x2, Poly[1]);
-    z = fma(Poly[8], x2, Poly[6]);
-    z = fma(z, x2, Poly[4]);
-    z = fma(z, x2, Poly[2]);
-    z = fma(z, x2, Poly[0]);
+    y = fma(Poly[i][7], x2, Poly[i][5]);
+    y = fma(y, x2, Poly[i][3]);
+    y = fma(y, x2, Poly[i][1]);
+    z = fma(Poly[i][6], x2, Poly[i][4]);
+    z = fma(z, x2, Poly[i][2]);
+    z = fma(z, x2, Poly[i][0]);
     y = fma(y, t, z);
     y = copysign(y, x);
     return y;
 }
-
-double myAtan(double x) {
-    double t, x2, y, z;
+double calculatePolynom2(double x, int i)
+{
+    double z, y, x2, t;
     t = abs(x);
-    x2 = t * t;
-
-    if (t > 1.5) {
-        if (t > 5)
-            if (t > 8)
-                if (t > 11)
-                    if (t > 16)
-                        return calculatePolynom(x, P20);
-                    else
-                        return calculatePolynom(x, P19);
-                else
-                    return calculatePolynom(x, P18);
-            else if (t > 6.2)
-                return calculatePolynom(x, P17);
-            else
-                return calculatePolynom(x, P16);
-        else if (t > 2.5)
-            if (t > 4)
-                return calculatePolynom(x, P15);
-            else if (t > 3.2)
-                return calculatePolynom(x, P14);
-            else
-                return calculatePolynom(x, P13);
-        else if (t > 2)
-            return calculatePolynom(x, P12);
-        else
-            return calculatePolynom(x, P11);
+    x2 = x * x;
+    y = fma(Poly[i][9], x2, Poly[i][7]);
+    y = fma(y, x2, Poly[i][5]);
+    y = fma(y, x2, Poly[i][3]);
+    y = fma(y, x2, Poly[i][1]);
+    z = fma(Poly[i][8], x2, Poly[i][6]);
+    z = fma(z, x2, Poly[i][4]);
+    z = fma(z, x2, Poly[i][2]);
+    z = fma(z, x2, Poly[i][0]);
+    y = fma(y, t, z);
+    y = copysign(y, x);
+    return y;
+}
+double myAtanV2(double x) {
+    double t;
+    t = abs(x);
+    int a = round(t * 8 - 0.500001);
+    if (a >= 6)
+        return calculatePolynom1(x, a);
+    else if (a >= 4)
+        return calculatePolynom2(x, a);
+    else if (a == 3) {
+        double y;
+        double x2 = t * t;
+        y = fma(Poly[3][6], x2, Poly[3][5]);
+        y = fma(y, x2, Poly[3][4]);
+        y = fma(y, x2, Poly[3][3]);
+        y = fma(y, x2, Poly[3][2]);
+        y = fma(y, x2, Poly[3][1]);
+        y = fma(y, x2, Poly[3][0]);
+        y = y * x;
+        return y;
     }
-    else if (t > 0.5) {
-        if (t > 0.75)
-            if (t > 1.2)
-                return calculatePolynom(x, P10);
-            else if (t > 0.95)
-                return calculatePolynom(x, P9);
-            else
-                return calculatePolynom(x, P8);
-        else if (t > 0.6)
-            return calculatePolynom(x, P7);
-        else
-            return calculatePolynom(x, P6);
-    }
-    else if (t > 0.2) {
-        if (t > 0.4) {
-            y = fma(P5[6], x2, P5[5]);
-            y = fma(y, x2, P5[4]);
-            y = fma(y, x2, P5[3]);
-            y = fma(y, x2, P5[2]);
-            y = fma(y, x2, P5[1]);
-            y = fma(y, x2, P5[0]);
-            y = y * x;
-            return y;
-        }
-        else if (t > 0.3) {
-            y = fma(P4[5], x2, P4[4]);
-            y = fma(y, x2, P4[3]);
-            y = fma(y, x2, P4[2]);
-            y = fma(y, x2, P4[1]);
-            y = fma(y, x2, P4[0]);
-            y = y * x;
-            return y;
-        }
-        else {
-            y = fma(P3[5], x2, P3[4]);
-            y = fma(y, x2, P3[3]);
-            y = fma(y, x2, P3[2]);
-            y = fma(y, x2, P3[1]);
-            y = fma(y, x2, P3[0]);
-            y = y * x;
-            return y;
-        }
-    }
-    else if (t > 0.1) {
-        y = fma(P[4], x2, P[3]);
-        y = fma(y, x2, P[2]);
-        y = fma(y, x2, P[1]);
-        y = fma(y, x2, P[0]);
+    else if (a == 2) {
+        double y;
+        double x2 = t * t;
+        y = fma(Poly[2][5], x2, Poly[2][4]);
+        y = fma(y, x2, Poly[2][3]);
+        y = fma(y, x2, Poly[2][2]);
+        y = fma(y, x2, Poly[2][1]);
+        y = fma(y, x2, Poly[2][0]);
         y = y * x;
         return y;
     }
     else {
-        y = fma(P[4], x2, P[3]);
-        y = fma(y, x2, P[2]);
-        y = fma(y, x2, P[1]);
-        y = fma(y, x2, P[0]);
+        double y;
+        double x2 = t * t;
+        y = fma(Poly[a][4], x2, Poly[a][3]);
+        y = fma(y, x2, Poly[a][2]);
+        y = fma(y, x2, Poly[a][1]);
+        y = fma(y, x2, Poly[a][0]);
         y = y * x;
         return y;
     }
+
 }
 
 
 int main() {
-    double x;
-    cin >> x;
-    
-    cout << endl;
 
-    printf("%.40lf", atan(x) - myAtan(x));
+    
     return 0;
 }
 
